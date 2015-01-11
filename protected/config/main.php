@@ -5,7 +5,7 @@
 
 $branch = "frontend";
 if ($_SERVER['REQUEST_URI'] == "/manage" or mb_strpos($_SERVER['REQUEST_URI'], "/manage/", 0, "UTF-8") === 0)
-	$branch = "backend";
+    $branch = "backend";
 
 // Php constants and functions
 require_once(dirname(__FILE__) . '/../vendors/constants_and_functions.php');
@@ -26,7 +26,7 @@ return CMap::mergeArray(
 		),
 		'components' => array(
 			'user' => array(
-				'class' => 'CWebUser',
+				'class' => 'WebUser',
 				'allowAutoLogin' => true,
 			),
 			'authManager' => array(
@@ -50,12 +50,19 @@ return CMap::mergeArray(
 			'ih' => array(
 				'class' => 'CImageHandler',
 			),
+			'file'=>array(
+                'class'=>'application.extensions.file.CFile',
+            ),
 			'config' => array(
 				'class' => 'CConfig',
 			),
 		),
 		'modules' => array(
-			'callback',	
+			'callback',
+			'services',
+			'gallery',
+			'reviews',
+			'news',
 		),
 		'behaviors' => array(
 			'runBranch' => array(
@@ -66,8 +73,11 @@ return CMap::mergeArray(
 				'class' => 'application.behaviors.ModulesInformationBehavior',
 			),
 		),
+		'params'=>array(
+			'isDemo'=>false,
+		),
 	),
-	require(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'local.php'),
+    @require(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'local.php'),
 	require(dirname(__FILE__) . DIRECTORY_SEPARATOR . $branch . '.php')
 );
 ?>

@@ -5,8 +5,8 @@ class SSortableBehavior extends CActiveRecordBehavior {
 	public $sortField = 'sort_order';
 	public $categoryField;
 
-	public function beforeSave($event) {
-		
+	public function beforeSave($event)
+	{
 		$owner = $this->getOwner();
 		if(!$owner->getIsNewRecord()) return;
 		//Если запись новая, устанавливается минимальное значение порядка. Остальные записи сдвигаются на 1
@@ -33,20 +33,22 @@ class SSortableBehavior extends CActiveRecordBehavior {
 	}
 	
 	//Перемещение записи вверх или вниз в списке
-	public function move($direction){
+	public function move($direction)
+	{
 		$owner=$this->getOwner();
-		
-		if($direction=='up'){
+		if($direction=='up')
+		{
 			if($owner->_is_first()) 
-				throw new CHttpException(400,$owner->title . ' Уже первый');
+				throw new CHttpException(400,/*$owner->title . */' Уже первый');
 			
 			$criteria=new CDbCriteria;
 			$criteria->condition="{$this->sortField}<{$owner->{$this->sortField}}";
 			$criteria->order = "{$this->sortField} desc";
 		}
-		elseif($direction=='down'){
+		elseif($direction=='down')
+		{
 			if($owner->_is_last()) 
-				throw new CHttpException(400,$owner->title . 'Уже последний');
+				throw new CHttpException(400,/*$owner->title . */' Уже последний');
 			
 			$criteria=new CDbCriteria;
 			$criteria->condition="{$this->sortField}>{$owner->{$this->sortField}}";
@@ -71,8 +73,8 @@ class SSortableBehavior extends CActiveRecordBehavior {
 		$first->{$this->sortField} = $second->{$this->sortField};
 		$second->{$this->sortField} = $firstValue;
 		
-		$first->save();
-		$second->save();
+		$first->save(false);
+		$second->save(false);
     }
 	
 	
